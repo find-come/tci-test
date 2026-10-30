@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCI 교육용 간이 자기점검</title>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-light: #e0e7ff;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+            --border-color: #e5e7eb;
+        }
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: var(--card-bg);
+            min-height: 100vh;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 24px 20px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.3rem;
+        }
+        header p {
+            margin: 0;
+            font-size: 0.85rem;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        .content {
+            padding: 20px;
+            flex: 1;
+        }
+        .notice {
+            background-color: #fef3c7;
+            border: 1px: #f59e0b;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #92400e;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        .question-card {
+            background: #f9fafb;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .question-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 8px;
+        }
+        .scale-options {
+            display: flex;
+            justify-content: space-between;
+            gap: 4px;
+        }
+        .scale-options label {
+            flex: 1;
+            text-align: center;
+            font-size: 0.75rem;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .scale-options input {
+            display: none;
+        }
+        .scale-options input:checked + span {
+            font-weight: bold;
+        }
+        .scale-options label:has(input:checked) {
+            background-color: var(--primary-light);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        .scale-labels-desc {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #6b7280;
+            margin-top: 4px;
+            padding: 0 4px;
+        }
+        .btn-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+        /* 결과 화면 스타일 */
+        .result-container {
+            display: none;
+            padding: 20px;
+        }
+        .result-card {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+        .result-card h3 {
+            margin: 0 0 6px 0;
+            font-size: 0.95rem;
+            color: var(--primary-color);
+        }
+        .score-bar-bg {
+            background: #e2e8f0;
+            border-radius: 4px;
+            height: 10px;
+            width: 100%;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+        .score-bar-fill {
+            background: var(--primary-color);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .result-desc {
+            font-size: 0.8rem;
+            color: #4b5563;
+            margin-top: 6px;
+            line-height: 1.35;
+        }
+        .restart-btn {
+            background-color: #6b7280;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>TCI 교육용 간이 자기점검</h1>
+        <p>클로닝거(Cloninger) 이론 기반 기질·성격 간이 점검 도구</p>
+    </header>
+
+    <!-- 설문 작성 영역 -->
+    <div id="quiz-section" class="content">
+        <div class="notice">
+            ⚠️ 안내: 정식 TCI 진단검사가 아니며 학습 및 교육 목적의 자기점검용입니다. 평소 경향에 따라 1점(전혀 아니다)부터 5점(매우 그렇다)까지 솔직하게 체크해 주세요[cite: 1].
+        </div>
+        <form id="tci-form"></form>
+        <div class="btn-container" style="background:transparent; border:none; padding:10px 0;">
+            <button type="button" class="submit-btn" onclick="calculateResult()">결과 분석하기</button>
+        </div>
+    </div>
+
+    <!-- 결과 확인 영역 -->
+    <div id="result-section" class="result-container">
+        <h2>📊 나의 7차원 프로파일 결과</h2>
+        <div class="notice" style="margin-bottom: 15px;">
+            규준이 없는 교육용 점수이므로 높낮이의 절대적 판정보다 7개 점수 간의 상대적 모양을 관찰해 보세요.
+        </div>
+        <div id="result-list"></div>
+        <button type="button" class="restart-btn" onclick="resetTest()">다시 테스트하기</button>
+    </div>
+</div>
+
+<script>
+    // 35개 문항 데이터
+    const questions = [
+        "새로운 장소나 활동을 접하면 일단 해보고 싶은 마음이 생긴다[cite: 1].",
+        "앞일이 불확실하면 좋지 않은 결과부터 떠올리는 편이다[cite: 1].",
+        "주변 사람의 따뜻한 반응이나 인정에 마음이 크게 움직인다[cite: 1].",
+        "진전이 더디더라도 시작한 일은 꾸준히 이어가는 편이다[cite: 1].",
+        "내 선택의 결과에 대해 내가 책임져야 한다고 생각한다[cite: 1].",
+        "나와 다른 사람의 입장과 필요도 함께 고려하려고 한다[cite: 1].",
+        "나 자신을 넘어 더 큰 의미나 연결감을 느낄 때가 있다[cite: 1].",
+        "반복되는 일보다 변화와 새로운 자극이 있는 일을 선호한다[cite: 1].",
+        "낯선 상황에서는 충분히 안전하다고 느낄 때까지 조심스럽다[cite: 1].",
+        "가까운 사람과 정서적으로 연결되어 있다는 느낌이 중요하다[cite: 1].",
+        "어려움이 생겨도 목표를 쉽게 포기하지 않는 편이다[cite: 1].",
+        "해야 할 일을 스스로 정하고 조절하는 편이다[cite: 1].",
+        "갈등이 있을 때 상대의 관점에서도 상황을 이해하려고 한다[cite: 1].",
+        "삶의 사건에서 개인적인 이익을 넘어선 의미를 찾곤 한다[cite: 1].",
+        "흥미로운 일이 생기면 계획보다 즉흥적으로 움직일 때가 있다[cite: 1].",
+        "실수하거나 실패할 가능성을 미리 많이 걱정하는 편이다[cite: 1].",
+        "다른 사람에게 정서적 지지나 격려를 받으면 힘이 난다[cite: 1].",
+        "단조롭거나 힘든 과정도 필요하다면 견디며 지속한다[cite: 1].",
+        "내 삶의 방향을 남보다 내가 결정하려고 한다[cite: 1].",
+        "함께 일할 때 경쟁만큼 협력과 상호 존중을 중요하게 여긴다[cite: 1].",
+        "자연·예술·종교·명상 등의 경험에서 깊은 몰입이나 경외감을 느끼기도 한다[cite: 2].",
+        "새로운 아이디어가 떠오르면 기존 방식보다 시험해보고 싶어진다[cite: 2].",
+        "중요한 일을 앞두면 일어날 수 있는 문제들을 여러 번 점검한다[cite: 2].",
+        "사람들과 친밀한 관계를 유지하는 것이 내게 중요한 편이다[cite: 2].",
+        "당장 보상이 없어도 가치 있다고 생각하는 일은 계속할 수 있다[cite: 2].",
+        "문제가 생겼을 때 환경 탓만 하기보다 내가 바꿀 수 있는 부분을 찾는다[cite: 2].",
+        "사람의 약점이나 실수를 보더라도 쉽게 단정하지 않으려 한다[cite: 2].",
+        "때로는 나와 세상의 경계가 옅어지는 듯한 깊은 연결감을 경험한다[cite: 2].",
+        "새로운 경험을 위해 어느 정도의 불편이나 위험은 감수할 수 있다[cite: 2].",
+        "익숙하지 않은 사람이나 환경에서는 긴장이 높아지는 편이다[cite: 2].",
+        "칭찬이나 인정이 줄어들면 의욕도 어느 정도 영향을 받는다[cite: 2].",
+        "실패를 경험해도 다시 시도하는 편이다[cite: 2].",
+        "내 행동이 장기적인 목표와 맞는지 스스로 점검한다[cite: 2].",
+        "나의 목표뿐 아니라 공동체에 도움이 되는 방향도 중요하게 생각한다[cite: 2].",
+        "설명하기 어려운 직관적·초월적 경험을 의미 있게 받아들이는 편이다[cite: 2]."
+    ];
+
+    // 7개 척도 정의 (문항 번호는 1부터 시작하므로 인덱스는 -1 처리)
+    const scales = [
+        { key: "NS", name: "NS (자극추구)", items: [1, 8, 15, 22, 29], desc: "새로움, 변화, 탐색과 보상 단서에 얼마나 빠르게 끌리는지 나타냅니다." },
+        { key: "HA", name: "HA (위험회피)", items: [2, 9, 16, 23, 30], desc: "불확실성, 위험 가능성에 대한 조심성과 걱정 경향을 나타냅니다[cite: 5]." },
+        { key: "RD", name: "RD (보상의존/사회적 민감성)", items: [3, 10, 17, 24, 31], desc: "관계적 인정, 정서적 유대와 사회적 보상에 반응하는 정도를 나타냅니다[cite: 5]." },
+        { key: "PS", name: "PS (인내력)", items: [4, 11, 18, 25, 32], desc: "좌절, 피로, 즉각적 보상 부족에도 행동을 지속하는 경향을 나타냅니다[cite: 5]." },
+        { key: "SD", name: "SD (자율성)", items: [5, 12, 19, 26, 33], desc: "자신의 행동을 선택·조절하며 목표와 가치에 맞게 책임지는 정도를 나타냅니다[cite: 5]." },
+        { key: "CO", name: "CO (연대감/협동성)", items: [6, 13, 20, 27, 34], desc: "타인을 존중하고 수용하며 함께 살아가는 관계적 태도를 나타냅니다[cite: 5]." },
+        { key: "ST", name: "ST (자기초월)", items: [7, 14, 21, 28, 35], desc: "개인적 자아를 넘어 자연, 공동체, 존재의 의미와 연결되는 경험을 나타냅니다[cite: 5]." }
+    ];
+
+    // 설문 동적 생성
+    const formContainer = document.getElementById('tci-form');
+    questions.forEach((q, index) => {
+        let qNum = index + 1;
+        let card = document.createElement('div');
+        card.className = 'question-card';
+        
+        let title = document.createElement('div');
+        title.className = 'question-title';
+        title.innerHTML = `<span>Q${qNum}.</span> <span>${q}</span>`;
+        card.appendChild(title);
+
+        let optionsDiv = document.createElement('div');
+        optionsDiv.className = 'scale-options';
+
+        for (let i = 1; i <= 5; i++) {
+            let label = document.createElement('label');
+            label.innerHTML = `<input type="radio" name="q${qNum}" value="${i}" required><span>${i}점</span>`;
+            optionsDiv.appendChild(label);
+        }
+        card.appendChild(optionsDiv);
+
+        let descDiv = document.createElement('div');
+        descDiv.className = 'scale-labels-desc';
+        descDiv.innerHTML = `<span>1: 전혀 아니다</span><span>5: 매우 그렇다</span>`;
+        card.appendChild(descDiv);
+
+        formContainer.appendChild(card);
+    });
+
+    // 결과 계산 함수
+    function calculateResult() {
+        // 응답 검증
+        for (let i = 1; i <= 35; i++) {
+            let radios = document.getElementsByName(`q${i}`);
+            let answered = false;
+            for (let r of radios) {
+                if (r.checked) { answered = true; break; }
+            }
+            if (!answered) {
+                alert(`[Q${i}] 문항에 응답하지 않았습니다. 모든 문항에 체크해 주세요.`);
+                document.getElementsByName(`q${i}`)[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+        }
+
+        // 점수 집계
+        let resultListHtml = '';
+        scales.forEach(scale => {
+            let sum = 0;
+            scale.items.forEach(itemNum => {
+                let val = document.querySelector(`input[name="q${itemNum}"]:checked`).value;
+                sum += parseInt(val);
+            });
+
+            // 점수 퍼센티지 바 계산 (범위: 5~25점 -> 0~100% 변환)
+            let percentage = ((sum - 5) / 20) * 100;
+
+            resultListHtml += `
+                <div class="result-card">
+                    <h3>${scale.name} : <strong>${sum}점</strong> / 25점</h3>
+                    <div class="score-bar-bg">
+                        <div class="score-bar-fill" style="width: ${percentage}%;"></div>
+                    </div>
+                    <div class="result-desc">${scale.desc}</div>
+                </div>
+            `;
+        });
+
+        document.getElementById('result-list').innerHTML = resultListHtml;
+        document.getElementById('quiz-section').style.display = 'none';
+        document.getElementById('result-section').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 다시 테스트하기
+    function resetTest() {
+        document.getElementById('tci-form').reset();
+        document.getElementById('result-section').style.display = 'none';
+        document.getElementById('quiz-section').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
